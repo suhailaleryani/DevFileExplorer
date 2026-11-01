@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "dev-file-explorer",
   "private": true,
   "description": "A fast file explorer for developers with a large projects folder",
@@ -6,7 +6,7 @@
   "repository": { "type": "git", "url": "git+https://github.com/suhailaleryani/DevFileExplorer.git" },
   "homepage": "https://github.com/suhailaleryani/DevFileExplorer#readme",
   "bugs": { "url": "https://github.com/suhailaleryani/DevFileExplorer/issues" },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,7 @@
     "test:js": "node --test \"tests/unit/*.test.ts\" \"tests/contract/*.test.mjs\"",
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml --lib",
     "test:smoke": "powershell -NoProfile -File tests/smoke/app-smoke.ps1",
+    "test:ui": "node tests/demo/tabs-check.mjs",
     "tauri": "tauri"
   },
   "dependencies": {

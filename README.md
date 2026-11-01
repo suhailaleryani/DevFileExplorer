@@ -1,4 +1,4 @@
-# DevFileExplorer
+﻿# DevFileExplorer
 
 A fast desktop file explorer built for developers whose projects folder has grown out of control. It shows how stale every project is, what has uncommitted or unpushed work, what you can safely delete to free disk space, and it remembers every change you make for 30 days.
 
@@ -6,7 +6,7 @@ Built with **Tauri 2** (Rust) and **React 19 + TypeScript**. No UI library, no d
 
 ![Dashboard](docs/screenshots/01-dashboard.png)
 
-> **[User guide site](https://suhailaleryani.github.io/DevFileExplorer/)** · **[Download](https://github.com/suhailaleryani/DevFileExplorer/releases/latest)** · **[Request a feature](https://github.com/suhailaleryani/DevFileExplorer/issues/new/choose)**
+> **[User guide site](https://suhailaleryani.github.io/DevFileExplorer/)** Â· **[Download](https://github.com/suhailaleryani/DevFileExplorer/releases/latest)** Â· **[Request a feature](https://github.com/suhailaleryani/DevFileExplorer/issues/new/choose)**
 >
 > **Status:** early and in daily use on Windows. macOS and Linux are targeted in the code but not yet verified; see [Platform status](#platform-status). **Contributions and feature requests are very welcome**: see [Contributing](#contributing).
 
@@ -32,7 +32,7 @@ Built with **Tauri 2** (Rust) and **React 19 + TypeScript**. No UI library, no d
 
 Pick a **projects folder** once. Every direct subfolder becomes a project card in the left pane.
 
-- **Age at a glance**: a coloured dot and "Edited 2w · folder 2w" show how long since a file inside last changed (ignoring `node_modules`, `.git`, `dist`, `target`, `bin`, `obj` and other generated folders) and how long since the folder itself changed. Colours: green under 1 week, yellow under 1 month, orange under 3 months, red older. The ignore list and the thresholds can be changed in the settings file (`ignore` and `thresholds` in `state.json`); there is no settings screen yet.
+- **Age at a glance**: a coloured dot and "Edited 2w Â· folder 2w" show how long since a file inside last changed (ignoring `node_modules`, `.git`, `dist`, `target`, `bin`, `obj` and other generated folders) and how long since the folder itself changed. Colours: green under 1 week, yellow under 1 month, orange under 3 months, red older. The ignore list and the thresholds can be changed in the settings file (`ignore` and `thresholds` in `state.json`); there is no settings screen yet.
 - **Status tags**: Active, Unfinished, Abandoned, Done, Idea. One click to set.
 - **One-line notes** ("what's left to do") on any project.
 - **Git info** when `git` is installed (it is found even if it is not on the PATH): current branch, uncommitted changes, commits ahead (unpushed) and behind the remote.
@@ -197,6 +197,7 @@ npm test               # JS unit + contract tests, then the Rust tests
 npm run test:js        # 49 tests: path/format helpers, attention rules, history logic, command contract
 npm run test:rust      # 62 tests: file operations, cleaner, stack detection, scripts, search, git, trash restore
 npm run test:smoke     # read-only check of a running dev app (sends no input)
+npm run test:ui        # isolated UI regression check for tabs (needs the demo projects and the Vite server, see tests/demo)
 npx tsc --noEmit       # type-check; must print nothing
 ```
 
