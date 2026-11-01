@@ -56,7 +56,12 @@ const DEFAULTS: Persisted = {
 };
 
 let tabCounter = 0;
-const newTab = (path: string): TabState => ({ id: `t${Date.now()}-${tabCounter++}`, history: [path], idx: 0 });
+const newTab = (path: string, root?: string | null): TabState => ({
+  id: `t${Date.now()}-${tabCounter++}`,
+  history: [path],
+  idx: 0,
+  ...(root ? { root } : {}),
+});
 
 export default function App() {
   const [st, setSt] = useState<Persisted | null>(null);
@@ -131,6 +136,8 @@ export default function App() {
 
   const tab = st ? st.tabs[st.activeTab] : null;
   const cwd = tab ? tab.history[tab.idx] : null;
+  /** The projects folder of the active tab; every tab has its own project list. */
+  const root = tab?.root ?? st?.root ?? null;
 
   const flash = useCallback((msg: string) => {
     setToast(msg);
@@ -141,7 +148,8 @@ export default function App() {
   const navigate = useCallback(
     (path: string, inNewTab = false) =>
       update((s) => {
-        if (inNewTab) return { ...s, tabs: [...s.tabs, newTab(path)], activeTab: s.tabs.length };
+        // a new tab starts with the projects folder of the tab it was opened from
+        if (inNewTab) return { ...s, tabs: [...s.tabs, newTab(path, s.tabs[s.activeTab]?.root ?? s.root)], activeTab: s.tabs.length };
         const t = s.tabs[s.activeTab];
         if (t.history[t.idx] === path) return s;
         const history = [...t.history.slice(0, t.idx + 1), path];
@@ -362,7 +370,7 @@ export default function App() {
     const b = base.replace(/[\\/]+$/, "").toLowerCase();
     return a === b || a.startsWith(b + "\\") || a.startsWith(b + "/");
   };
-  const underRoot = (p: string) => !!st?.root && inside(p, st.root);
+  const underRoot = (p: string) => !!root && inside(p, root);
   const afterOp = async (paths: string[]) => {
     await reload();
     const touched = cwd ? [...paths, cwd] : paths;
@@ -576,7 +584,12 @@ export default function App() {
     const dir = await pickFolder({ directory: true, multiple: false, title: "Choose your projects folder" });
     if (typeof dir === "string") {
       logOp({ kind: "root", paths: [dir], isDir: () => true });
-      update((s) => ({ ...s, root: dir }));
+      // only the active tab gets the new projects folder; the global one is just the default for tabs without their own
+      update((s) => ({
+        ...s,
+        root: s.root ?? dir,
+        tabs: s.tabs.map((x, i) => (i === s.activeTab ? { ...x, root: dir } : x)),
+      }));
       navigate(dir);
     }
   };
@@ -858,7 +871,7 @@ export default function App() {
     return () => window.removeEventListener("keydown", h);
   }, []);
 
-  const projects = useProjects(st?.root ?? null, st?.ignore ?? DEFAULT_IGNORE, gitOk, pv, lv);
+  const projects = useProjects(root,st?.ignore ?? DEFAULT_IGNORE, gitOk, pv, lv);
 
   if (!st || !tab || !cwd) return <div className="loading">Loading…</div>;
 
@@ -880,7 +893,7 @@ export default function App() {
         <Sidebar
           cwd={cwd}
           width={sidebarWidth}
-          root={st.root}
+          root={root}
           pins={st.pins}
           pinVersion={pinV}
           meta={st.meta}

@@ -22,11 +22,18 @@ export function useProjects(root: string | null, ignore: string[], gitOk: boolea
   const [git, setGit] = useState<Record<string, GitInfo | null>>({});
   const [stacks, setStacks] = useState<Record<string, string[]>>({});
 
+  // Switching to a tab with another projects folder must not rescan everything: reuse badges scanned in the last 2 minutes.
+  // A real refresh (version bump after a file operation) always rescans.
+  const scannedAt = useRef(new Map<string, number>());
+  const lastVersion = useRef(version);
+
   useEffect(() => {
     if (!root || gitOk === null) {
       setList([]);
       return;
     }
+    const reuse = lastVersion.current === version;
+    lastVersion.current = version;
     let cancelled = false;
     (async () => {
       let entries: Entry[] = [];
@@ -42,6 +49,8 @@ export function useProjects(root: string | null, ignore: string[], gitOk: boolea
       const worker = async () => {
         while (queue.length && !cancelled) {
           const p = queue.shift()!;
+          if (reuse && Date.now() - (scannedAt.current.get(p.path) ?? 0) < 120_000) continue;
+          scannedAt.current.set(p.path, Date.now());
           try {
             const pi = await projectInfo(p.path, ignore);
             if (!cancelled) setInfo((m) => ({ ...m, [p.path]: pi }));

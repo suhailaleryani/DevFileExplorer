@@ -49,6 +49,8 @@ export interface TabState {
   id: string;
   history: string[];
   idx: number;
+  /** this tab's own projects folder (the sidebar list); tabs without one use the global `root` */
+  root?: string | null;
 }
 export interface ProjectMeta {
   status?: Status;

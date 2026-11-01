@@ -16,7 +16,7 @@
     "test:js": "node --test \"tests/unit/*.test.ts\" \"tests/contract/*.test.mjs\"",
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml --lib",
     "test:smoke": "powershell -NoProfile -File tests/smoke/app-smoke.ps1",
-    "test:ui": "node tests/demo/tabs-check.mjs",
+    "test:ui": "node tests/demo/tabs-check.mjs && node tests/demo/tab-roots-check.mjs",
     "tauri": "tauri"
   },
   "dependencies": {

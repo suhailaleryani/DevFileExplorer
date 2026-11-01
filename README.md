@@ -49,7 +49,7 @@ Pin any folder (context menu, or drag it onto the pinned area). Pins look like p
 
 ### Browsing
 
-- **Tabs** with their own history; open a folder in a new tab with middle-click or the context menu; reorder by dragging; open tabs are restored on the next launch.
+- **Tabs** with their own history; open a folder in a new tab with middle-click or the context menu; reorder by dragging; open tabs are restored on the next launch. **Each tab also has its own projects folder and project list**: click **change** in a tab to give just that tab another projects folder, and a new tab starts with the folder of the tab it was opened from.
 - **Address bar** you can type into, plus clickable breadcrumbs. Back, forward and up navigation, including the mouse back and forward buttons.
 - **Columns**: name, date modified, type, size; click a header to sort. File icons are coloured by type.
 - **Folder sizes** are calculated in the background on demand ("calculate"), with a time budget so a huge folder never freezes the window.
@@ -197,7 +197,7 @@ npm test               # JS unit + contract tests, then the Rust tests
 npm run test:js        # 49 tests: path/format helpers, attention rules, history logic, command contract
 npm run test:rust      # 62 tests: file operations, cleaner, stack detection, scripts, search, git, trash restore
 npm run test:smoke     # read-only check of a running dev app (sends no input)
-npm run test:ui        # isolated UI regression check for tabs (needs the demo projects and the Vite server, see tests/demo)
+npm run test:ui        # isolated UI regression checks for tabs and per-tab project lists (needs the demo projects and the Vite server, see tests/demo)
 npx tsc --noEmit       # type-check; must print nothing
 ```
 
