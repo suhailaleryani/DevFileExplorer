@@ -1076,8 +1076,20 @@ async fn restore_trashed(paths: Vec<String>, deleted_at_ms: i64) -> Result<OpRes
                     failed.push(format!("{p}: something with that name already exists there"));
                     continue;
                 }
+                let restored_at = items[n].original_path();
                 match trash::os_limited::restore_all([items[n].clone()]) {
-                    Ok(_) => ok += 1,
+                    Ok(_) => {
+                        // The bin can list a file without its extension (Windows hides known extensions), and it is
+                        // put back under that listed name: give it its real name again.
+                        let wanted = Path::new(&p);
+                        if norm_path(&restored_at) != norm_path(wanted) && restored_at.exists() && !wanted.exists() {
+                            if let Err(e) = rename_retry(&restored_at, wanted) {
+                                failed.push(format!("{p}: restored as \"{}\" but could not restore its extension ({e})", restored_at.display()));
+                                continue;
+                            }
+                        }
+                        ok += 1;
+                    }
                     Err(e) => failed.push(format!("{p}: {e}")),
                 }
             }
