@@ -25,10 +25,11 @@ gh repo create DevFileExplorer --public --source . --remote origin --push
 
 ### Option B: deploy with the included GitHub Actions workflow
 
-`.github/workflows/pages.yml` publishes `docs/` every time you push a change to it.
+`.github/workflows/pages.yml` publishes `docs/`. It is set to run manually so it does not fail before Pages is enabled.
 
 1. **Settings**, **Pages**, **Source**: choose **GitHub Actions**.
-2. Push to `main`. Watch the run in the **Actions** tab. The page address is shown in the run summary.
+2. Open the **Actions** tab, pick **Publish guide site**, click **Run workflow**. The page address is shown in the run summary.
+3. To publish automatically from now on, uncomment the `push:` trigger at the top of `pages.yml`.
 
 Pages has a single "Source" setting, so only one option is active at a time. Switching the source later is fine.
 
