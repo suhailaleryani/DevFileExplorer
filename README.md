@@ -6,6 +6,8 @@ Built with **Tauri 2** (Rust) and **React 19 + TypeScript**. No UI library, no d
 
 ![Dashboard](docs/screenshots/01-dashboard.png)
 
+> **[User guide site](https://suhailaleryani.github.io/DevFileExplorer/)** · **[Download](https://github.com/suhailaleryani/DevFileExplorer/releases/latest)** · **[Request a feature](https://github.com/suhailaleryani/DevFileExplorer/issues/new/choose)**
+>
 > **Status:** early and in daily use on Windows. macOS and Linux are targeted in the code but not yet verified; see [Platform status](#platform-status). **Contributions and feature requests are very welcome**: see [Contributing](#contributing).
 
 ## Contents
@@ -312,4 +314,4 @@ Full details, the code map and a list of good first contributions are in [CONTRI
 
 ## Publishing the guide site
 
-The `docs/` folder is a ready-made static site (a user guide with the screenshots above). Step-by-step instructions for putting it online with GitHub Pages are in [docs/publish-guide.md](docs/publish-guide.md).
+The `docs/` folder is a static site (a user guide with the screenshots above), published at https://suhailaleryani.github.io/DevFileExplorer/ by `.github/workflows/pages.yml` whenever `docs/` changes on `main`. How it is set up, and how to publish your own copy, is in [docs/publish-guide.md](docs/publish-guide.md).

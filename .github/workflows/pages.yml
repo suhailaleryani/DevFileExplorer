@@ -1,13 +1,11 @@
 name: Publish guide site
 
 # Publishes the static site in docs/ with GitHub Pages.
-# Needs: Settings > Pages > Source = "GitHub Actions". See docs/publish-guide.md.
+# Needs: Settings > Pages > Source = "GitHub Actions" (already enabled). See docs/publish-guide.md.
 on:
-  # Manual until GitHub Pages is enabled. After enabling it (Settings > Pages > Source = GitHub Actions),
-  # add this trigger back to publish automatically on every change to docs/:
-  #   push:
-  #     branches: [main]
-  #     paths: ["docs/**"]
+  push:
+    branches: [main]
+    paths: ["docs/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
