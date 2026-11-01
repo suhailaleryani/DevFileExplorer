@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DevFileExplorer: user guide</title>
+<meta name="description" content="A fast file explorer for developers with a large projects folder: project dashboard, needs-attention view, disk cleaner, cross-project search and a 30-day history with undo.">
+<style>
+  :root {
+    --bg: #14161b; --bg2: #191c22; --bg3: #232731; --line: #2a2f3a; --text: #d9dde5; --dim: #8b93a3;
+    --accent: #4c8dff; --green: #3fb950; --red: #e5534b; --amber: #f0b94a;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #f7f8fa; --bg2: #eceef2; --bg3: #e0e3ea; --line: #d0d4dc; --text: #1f2430; --dim: #5b6475; --accent: #1f6feb; --green: #1a7f37; --red: #cf222e; --amber: #b45309; color-scheme: light; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  a { color: var(--accent); }
+  header.hero { padding: 56px 16px 40px; text-align: center; background: linear-gradient(var(--bg3), var(--bg)); border-bottom: 1px solid var(--line); }
+  header.hero img.logo { width: 96px; height: 96px; }
+  header.hero h1 { margin: 12px 0 6px; font-size: 2.2rem; }
+  header.hero p { margin: 0 auto; max-width: 640px; color: var(--dim); }
+  .wrap { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; max-width: 1100px; margin: 0 auto; padding: 24px 16px 80px; }
+  nav { position: sticky; top: 16px; align-self: start; font-size: 14px; }
+  nav a { display: block; padding: 4px 8px; color: var(--dim); text-decoration: none; border-left: 2px solid var(--line); }
+  nav a:hover { color: var(--text); border-color: var(--accent); }
+  main section { padding-top: 24px; }
+  h2 { margin: 32px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); font-size: 1.6rem; }
+  h3 { margin: 20px 0 4px; }
+  img.shot { display: block; width: 100%; height: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 24px rgba(0, 0, 0, .25); }
+  code, kbd { background: var(--bg3); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; font: 0.88em Consolas, monospace; }
+  pre { background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 15px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--dim); font-weight: 600; }
+  .tip { border-left: 3px solid var(--accent); background: var(--bg2); padding: 8px 14px; margin: 14px 0; border-radius: 0 6px 6px 0; }
+  .warn { border-left-color: var(--red); }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
+  .cta a { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); text-decoration: none; }
+  .cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  footer { text-align: center; color: var(--dim); padding: 24px 16px 48px; border-top: 1px solid var(--line); font-size: 14px; }
+  @media (max-width: 800px) { .wrap { grid-template-columns: 1fr; } nav { display: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img class="logo" src="icon.png" alt="DevFileExplorer icon">
+  <h1>DevFileExplorer</h1>
+  <p>A fast file explorer for developers whose projects folder has grown out of control. See what is stale, what has unpushed work, what you can delete, and what you changed in the last 30 days.</p>
+  <div class="cta">
+    <a class="primary" href="#start">Get started</a>
+    <a href="#contribute">Request a feature</a>
+    <a href="https://github.com/">View on GitHub</a>
+  </div>
+</header>
+
+<div class="wrap">
+<nav aria-label="Guide sections">
+  <a href="#start">Get started</a>
+  <a href="#dashboard">Project dashboard</a>
+  <a href="#attention">Needs attention</a>
+  <a href="#browse">Browsing and files</a>
+  <a href="#delete">Deleting safely</a>
+  <a href="#history">History and undo</a>
+  <a href="#cleaner">Free disk space</a>
+  <a href="#git">Git and scripts</a>
+  <a href="#search">Search and jump</a>
+  <a href="#keys">Shortcuts</a>
+  <a href="#data">Your data</a>
+  <a href="#platforms">Platforms</a>
+  <a href="#contribute">Contribute</a>
+</nav>
+
+<main>
+<section id="start">
+  <h2>Get started</h2>
+  <p>Requirements: Node 22+, stable Rust and, on Windows, the Visual Studio C++ Build Tools. Git is optional.</p>
+<pre><code>git clone &lt;your repository url&gt;
+cd DevFileExplorer
+npm install
+npm run tauri dev</code></pre>
+  <p>The first build is slow. On first launch click <b>change</b> in the Projects header and choose the folder that holds your projects. Every subfolder becomes a card.</p>
+  <img class="shot" src="screenshots/01-dashboard.png" alt="The main window: pinned folders and project cards on the left, the file list on the right">
+</section>
+
+<section id="dashboard">
+  <h2>Project dashboard</h2>
+  <ul>
+    <li><b>Age dot and dates</b>: green under a week, yellow under a month, orange under three months, red older. "Edited" is the newest real change inside (generated folders such as <code>node_modules</code> are ignored); "folder" is the folder's own date.</li>
+    <li><b>Status</b>: click the pill to set Active, Unfinished, Abandoned, Done or Idea. Add a one-line note for what is left to do.</li>
+    <li><b>Git</b>: branch, a dot for uncommitted changes, <code>↑2</code> for two unpushed commits.</li>
+    <li><b>Stack chips</b> are detected automatically (Tauri, Next.js, React, Rust, Python, Go, Docker and 17 more).</li>
+    <li><b>Pin</b> any folder from the context menu or by dragging it into the pinned area. Pins can be anywhere on disk.</li>
+    <li>Search by name, sort by name, dates or status, and filter by tag and stack.</li>
+  </ul>
+</section>
+
+<section id="attention">
+  <h2>Needs attention</h2>
+  <p>Switch from <b>All</b> to <b>Needs attention</b> to list only projects that deserve a look, with the reason in orange: uncommitted changes, unpushed commits, a branch that was never pushed, Active or Unfinished projects untouched for a long time, or commits you are behind. Repositories without a remote are never flagged as unpushed.</p>
+  <img class="shot" src="screenshots/02-needs-attention.png" alt="Needs attention view listing five projects with reasons">
+</section>
+
+<section id="browse">
+  <h2>Browsing and files</h2>
+  <ul>
+    <li><b>Tabs</b>: <kbd>Ctrl</kbd>+<kbd>T</kbd> new, <kbd>Ctrl</kbd>+<kbd>W</kbd> close, middle-click a folder to open it in a new tab, drag to reorder. Tabs are restored on the next launch.</li>
+    <li><b>Address bar</b>: click it or press <kbd>Ctrl</kbd>+<kbd>L</kbd> to type a path. Alt+Left/Right and the mouse back/forward buttons move through history.</li>
+    <li><b>Select</b> with click, Ctrl, Shift, a drag rectangle, or the keyboard. The footer shows counts and total size.</li>
+    <li><b>Copy, cut, paste</b> and <b>drag and drop</b> (hold Ctrl to copy). Clashes keep both files ("name - copy").</li>
+    <li><b>Rename</b> with <kbd>F2</kbd>; <b>New folder</b> and <b>New file</b> open straight into rename.</li>
+    <li><b>Filter</b> the folder with <kbd>Ctrl</kbd>+<kbd>F</kbd>. Right-click for Open in File Manager, VS Code or Terminal.</li>
+    <li>Themes: System, Light or Dark (button in the footer).</li>
+  </ul>
+  <img class="shot" src="screenshots/03-light-theme.png" alt="The same window in the light theme">
+</section>
+
+<section id="delete">
+  <h2>Deleting safely</h2>
+  <table>
+    <tr><th>Zone</th><th>Key</th><th>What happens</th></tr>
+    <tr><td>Recycle</td><td><kbd>Delete</kbd></td><td>Moves to the OS trash. Recoverable, and the History panel can undo it.</td></tr>
+    <tr><td>Black hole</td><td><kbd>Shift</kbd>+<kbd>Delete</kbd></td><td>Permanent and parallel, so a huge <code>node_modules</code> goes in seconds. Asks first, showing item count and size.</td></tr>
+  </table>
+  <p>Drag files onto either zone in the footer. Locked or read-only items are reported one by one and never stop the rest.</p>
+</section>
+
+<section id="history">
+  <h2>History and undo</h2>
+  <p>Click <b>History</b> in the footer. Every operation is recorded for 30 days, then removed automatically: creates, renames, moves, copies, deletes, restores, cleanups, pins, status and note changes, git actions and scripts. Failures are included, in red, with the error.</p>
+  <ul>
+    <li><b>Search</b>: every word must match a name, path, action or error.</li>
+    <li><b>Filter</b> by type chips, time range, or "Failed only".</li>
+    <li><b>Group</b> by day, type or folder; click a group header to collapse it.</li>
+    <li>Click a row for full paths. <b>Open</b> jumps to the folder. <b>Undo</b> restores recycled items from the Recycle Bin without overwriting anything.</li>
+  </ul>
+  <img class="shot" src="screenshots/04-history.png" alt="History panel grouped by day">
+  <img class="shot" src="screenshots/05-history-grouped.png" alt="History panel grouped by type">
+</section>
+
+<section id="cleaner">
+  <h2>Free disk space</h2>
+  <p>Click <b>clean up</b> in the Projects header. It lists folders that can be rebuilt: <code>node_modules</code>, Rust <code>target</code>, <code>dist</code>, <code>.next</code> and other caches, Python virtual environments and .NET <code>bin</code>/<code>obj</code>. Sizes appear as rows scroll into view. Tick what you want gone and confirm twice.</p>
+  <img class="shot" src="screenshots/06-cleaner.png" alt="Disk space cleaner grouped by project">
+</section>
+
+<section id="git">
+  <h2>Git and scripts</h2>
+  <ul>
+    <li>Right-click a project: <b>Git</b> then fetch, pull (fast-forward only), switch branch, or recent commits. <b>fetch all</b> refreshes every repository. Nothing ever pushes.</li>
+    <li>The green play button runs a <code>package.json</code> script (npm, pnpm, yarn or bun) or <code>cargo run/build/test/check</code> in a new terminal window. Windows only for now.</li>
+  </ul>
+</section>
+
+<section id="search">
+  <h2>Search and jump</h2>
+  <p><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> searches file contents or names in every project; click a hit to open VS Code at that line.</p>
+  <img class="shot" src="screenshots/07-search.png" alt="Cross-project search results">
+  <p><kbd>Ctrl</kbd>+<kbd>K</kbd> jumps to any project or pin; <kbd>Enter</kbd> opens it, <kbd>Ctrl</kbd>+<kbd>Enter</kbd> opens it in a new tab.</p>
+  <img class="shot" src="screenshots/08-quick-jump.png" alt="Quick jump palette">
+</section>
+
+<section id="keys">
+  <h2>Shortcuts</h2>
+  <table>
+    <tr><th>Keys</th><th>Action</th></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Quick jump</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>Search across projects</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>F</kbd></td><td>Filter this folder</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>L</kbd> / <kbd>Alt</kbd>+<kbd>D</kbd></td><td>Edit address bar</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>T</kbd> / <kbd>Ctrl</kbd>+<kbd>W</kbd></td><td>New / close tab</td></tr>
+    <tr><td><kbd>Alt</kbd>+<kbd>←</kbd> / <kbd>→</kbd></td><td>Back / forward</td></tr>
+    <tr><td><kbd>Backspace</kbd></td><td>Up one folder</td></tr>
+    <tr><td><kbd>F2</kbd> / <kbd>F5</kbd></td><td>Rename / refresh</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd> <kbd>X</kbd> <kbd>V</kbd> <kbd>A</kbd></td><td>Copy, cut, paste, select all</td></tr>
+    <tr><td><kbd>Delete</kbd> / <kbd>Shift</kbd>+<kbd>Delete</kbd></td><td>Recycle / delete permanently</td></tr>
+  </table>
+</section>
+
+<section id="data">
+  <h2>Your data</h2>
+  <p>Settings, pins, tags and notes live in <code>%APPDATA%\com.fileexplorer.app\state.json</code>; the history in <code>history.json</code> next to it. Put an empty <code>portable.flag</code> file next to the executable for portable mode. Nothing is uploaded and there is no telemetry. The age thresholds and ignore list are edited in <code>state.json</code> (<code>thresholds</code>, <code>ignore</code>); a settings screen is on the roadmap.</p>
+</section>
+
+<section id="platforms">
+  <h2>Platforms</h2>
+  <p>Windows is the daily-driver platform. The pure logic tests (49) pass on Ubuntu. Everything else on Linux, and all of macOS, is still unverified; CI on GitHub builds and tests all three systems for every pull request. See the README for the full list of known macOS and Linux gaps.</p>
+  <div class="tip warn"><b>Looking for macOS and Linux testers.</b> Run <code>npm test</code> and <code>npm run tauri dev</code>, then tell us what breaks.</div>
+</section>
+
+<section id="contribute">
+  <h2>Contribute or request a feature</h2>
+  <p>Developers are invited to help. Open an issue to <b>ask for a feature</b> (describe the problem you want solved), report a bug, or pick up a "good first contribution" from CONTRIBUTING.md. Pull requests run type-check and tests on Windows, Ubuntu and macOS automatically.</p>
+  <div class="tip">Tip: build with the fake projects from <code>tests/demo/make-demo.ps1</code> so you never experiment on real folders.</div>
+</section>
+</main>
+</div>
+
+<footer>DevFileExplorer · built with Tauri 2, Rust, React and TypeScript</footer>
+</body>
+</html>
