@@ -166,6 +166,20 @@ fn long_form_keeps_ordinary_paths_and_survives_missing_parents() {
 }
 
 #[test]
+fn pick_trashed_finds_items_whose_extension_is_hidden_by_windows() {
+    // "Hide extensions for known file types" lists report.pdf as "report"
+    let items = vec![bin_item("D:\\p", "report", 100), bin_item("D:\\p", "other", 100)];
+    assert_eq!(pick_trashed(&items, Path::new("D:\\p\\report.pdf"), 100), Some(0));
+    // an exact match always wins over the extension-less guess
+    let both = vec![bin_item("D:\\p", "report", 100), bin_item("D:\\p", "report.pdf", 100)];
+    assert_eq!(pick_trashed(&both, Path::new("D:\\p\\report.pdf"), 100), Some(1));
+    // names with several dots lose only the last extension
+    let tar = vec![bin_item("D:\\p", "a.tar", 5)];
+    assert_eq!(pick_trashed(&tar, Path::new("D:\\p\\a.tar.gz"), 5), Some(0));
+    assert_eq!(pick_trashed(&tar, Path::new("D:\\p\\b.tar.gz"), 5), None);
+}
+
+#[test]
 fn pick_trashed_ignores_case_slashes_and_missing_items() {
     let items = vec![bin_item("D:\\Proj", "File.TXT", 10)];
     assert_eq!(pick_trashed(&items, Path::new("d:/proj/file.txt"), 10), Some(0));

@@ -1045,13 +1045,16 @@ fn long_form(p: &Path) -> PathBuf {
 
 /// Of the bin items that came from `want`, the one deleted closest to `at_secs` (so an older file with the same name is left alone).
 fn pick_trashed(items: &[trash::TrashItem], want: &Path, at_secs: i64) -> Option<usize> {
-    let w = norm_path(want);
-    items
-        .iter()
-        .enumerate()
-        .filter(|(_, i)| norm_path(&i.original_path()) == w)
-        .min_by_key(|(_, i)| (i.time_deleted - at_secs).abs())
-        .map(|(n, _)| n)
+    let by_path = |w: &str| -> Vec<(usize, &trash::TrashItem)> {
+        items.iter().enumerate().filter(|(_, i)| norm_path(&i.original_path()) == w).collect()
+    };
+    let mut pool = by_path(&norm_path(want));
+    if pool.is_empty() {
+        // Windows hides known extensions in the bin when "Hide extensions for known file types" is on (the default):
+        // `report.pdf` is then listed as `report`.
+        pool = by_path(&norm_path(&want.with_extension("")));
+    }
+    pool.into_iter().min_by_key(|(_, i)| (i.time_deleted - at_secs).abs()).map(|(n, _)| n)
 }
 
 /// Put recycled items back where they were. `deleted_at_ms` is when the app recycled them.
