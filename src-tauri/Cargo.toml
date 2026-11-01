@@ -1,6 +1,6 @@
 [package]
 name = "dev-file-explorer"
-version = "0.1.0"
+version = "0.1.1"
 description = "DevFileExplorer: a file explorer for developers with a large projects folder"
 license = "MIT"
 repository = "https://github.com/suhailaleryani/DevFileExplorer"
