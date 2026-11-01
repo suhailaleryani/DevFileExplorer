@@ -1,6 +1,11 @@
 {
   "name": "dev-file-explorer",
   "private": true,
+  "description": "A fast file explorer for developers with a large projects folder",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/suhailaleryani/DevFileExplorer.git" },
+  "homepage": "https://github.com/suhailaleryani/DevFileExplorer#readme",
+  "bugs": { "url": "https://github.com/suhailaleryani/DevFileExplorer/issues" },
   "version": "0.1.0",
   "type": "module",
   "scripts": {
