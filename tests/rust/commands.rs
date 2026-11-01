@@ -162,6 +162,7 @@ fn pick_trashed_ignores_case_slashes_and_missing_items() {
 }
 
 #[test]
+#[cfg(any(windows, all(unix, not(target_os = "macos"))))]
 fn restore_trashed_round_trip_through_the_real_recycle_bin() {
     let t = Tmp::new();
     t.write("undo-me/inner.txt", "keep");
@@ -182,6 +183,7 @@ fn restore_trashed_round_trip_through_the_real_recycle_bin() {
 }
 
 #[test]
+#[cfg(any(windows, all(unix, not(target_os = "macos"))))]
 fn restore_trashed_reports_items_that_are_not_in_the_bin_or_would_clash() {
     let t = Tmp::new();
     t.write("exists.txt", "x");
