@@ -46,8 +46,7 @@ node tests/demo/capture.mjs                    # rewrites docs/screenshots/*.png
 
 ## 4. Fix the links
 
-- In `docs/index.html` replace the "View on GitHub" link (`https://github.com/`) with your repository URL.
-- In the README the issue links use relative paths (`../../issues/new?...`) and work on GitHub as they are.
+- The repository links in `docs/index.html` and the README already point to `https://github.com/suhailaleryani/DevFileExplorer`. If you fork or rename the repository, search for that URL and replace it.
 
 ## 5. Optional: a custom domain
 

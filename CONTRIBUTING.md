@@ -11,6 +11,22 @@ Open an issue and pick a template:
 
 Not sure yet? Open an issue anyway and say so. A conversation before code saves everyone time.
 
+## How to send a change (step by step)
+
+1. **Fork** https://github.com/suhailaleryani/DevFileExplorer and clone your fork.
+2. Create a branch from `main`: `git switch -c feat/short-description`.
+3. Set up (below) and make your change. Add or update a test.
+4. Run `npx tsc --noEmit` and `npm test`; both must be clean.
+5. Commit in focused steps with messages like `feat(history): ...`, `fix(search): ...`, `docs: ...`.
+6. Push the branch to your fork and open a **pull request** against `main`. Fill in the checklist, add a screenshot for UI changes, and link the issue (`Fixes #12`).
+7. CI runs on Windows, Ubuntu and macOS. Reply to review comments by pushing more commits; they are squashed or merged when approved.
+
+For anything larger than a small fix, open an issue first so we can agree on the approach before you spend time on it.
+
+## License
+
+The project is MIT licensed (see `LICENSE`). By submitting a pull request you agree that your contribution is released under the same license.
+
 ## Set up
 
 ```

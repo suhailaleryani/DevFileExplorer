@@ -53,7 +53,8 @@
   <div class="cta">
     <a class="primary" href="#start">Get started</a>
     <a href="#contribute">Request a feature</a>
-    <a href="https://github.com/">View on GitHub</a>
+    <a href="https://github.com/suhailaleryani/DevFileExplorer/releases/latest">Download</a>
+    <a href="https://github.com/suhailaleryani/DevFileExplorer">View on GitHub</a>
   </div>
 </header>
 
@@ -77,12 +78,21 @@
 <main>
 <section id="start">
   <h2>Get started</h2>
-  <p>Requirements: Node 22+, stable Rust and, on Windows, the Visual Studio C++ Build Tools. Git is optional.</p>
-<pre><code>git clone &lt;your repository url&gt;
+  <h3>Install on Windows</h3>
+  <ol>
+    <li>Download from the <a href="https://github.com/suhailaleryani/DevFileExplorer/releases/latest">latest release</a>: the <b>setup.exe</b> installer (per-user, no admin rights, adds Start Menu and desktop shortcuts) or the <b>portable.zip</b> (unzip anywhere, keeps its settings next to the exe).</li>
+    <li>The app is not code-signed yet, so SmartScreen may warn: click <b>More info</b>, then <b>Run anyway</b>.</li>
+    <li>It needs the Edge WebView2 runtime (built into Windows 11 and recent Windows 10); the installer fetches it if missing.</li>
+  </ol>
+  <h3>macOS and Linux</h3>
+  <p>No downloads yet and not verified. Build from source:</p>
+<pre><code>git clone https://github.com/suhailaleryani/DevFileExplorer.git
 cd DevFileExplorer
 npm install
 npm run tauri dev</code></pre>
-  <p>The first build is slow. On first launch click <b>change</b> in the Projects header and choose the folder that holds your projects. Every subfolder becomes a card.</p>
+  <p>Needs Node 22+, stable Rust and, on Windows, the Visual Studio C++ Build Tools; the first build is slow. Git is optional.</p>
+  <h3>First launch</h3>
+  <p>Click <b>change</b> in the Projects header and choose the folder that holds your projects. Every subfolder becomes a card.</p>
   <img class="shot" src="screenshots/01-dashboard.png" alt="The main window: pinned folders and project cards on the left, the file list on the right">
 </section>
 
@@ -193,7 +203,13 @@ npm run tauri dev</code></pre>
 
 <section id="contribute">
   <h2>Contribute or request a feature</h2>
-  <p>Developers are invited to help. Open an issue to <b>ask for a feature</b> (describe the problem you want solved), report a bug, or pick up a "good first contribution" from CONTRIBUTING.md. Pull requests run type-check and tests on Windows, Ubuntu and macOS automatically.</p>
+  <p>Developers are invited to help. The project is MIT licensed.</p>
+  <ol>
+    <li><b>Ask for a feature or report a bug</b>: <a href="https://github.com/suhailaleryani/DevFileExplorer/issues/new/choose">open an issue</a> and describe the problem you want solved.</li>
+    <li><b>Send code</b>: fork the repository, create a branch, add a test, run <code>npx tsc --noEmit</code> and <code>npm test</code>, then open a pull request. CI runs on Windows, Ubuntu and macOS.</li>
+    <li><b>Test on macOS or Linux</b> and tell us what breaks; that is the most valuable help right now.</li>
+  </ol>
+  <p>Details: <a href="https://github.com/suhailaleryani/DevFileExplorer/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
   <div class="tip">Tip: build with the fake projects from <code>tests/demo/make-demo.ps1</code> so you never experiment on real folders.</div>
 </section>
 </main>

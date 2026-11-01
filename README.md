@@ -10,16 +10,18 @@ Built with **Tauri 2** (Rust) and **React 19 + TypeScript**. No UI library, no d
 
 ## Contents
 
+- [Install](#install)
+- [Quick start](#quick-start)
 - [What it does](#what-it-does)
 - [Keyboard and mouse](#keyboard-and-mouse)
 - [Where your data lives](#where-your-data-lives)
 - [Safety](#safety)
-- [Install and run](#install-and-run)
 - [Testing](#testing)
 - [Platform status](#platform-status)
 - [Project layout](#project-layout)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
+- [License](#license)
 - [Publishing the guide site](#publishing-the-guide-site)
 
 ## What it does
@@ -146,18 +148,45 @@ On macOS and Linux the equivalent per-user app-data folder is used. The bundle i
 - Heavy scans (sizes, search, git) run in the background with time budgets, so the window stays responsive.
 - Nothing is uploaded; there is no telemetry.
 
-## Install and run
+## Install
+
+### Windows (recommended)
+
+1. Open the [latest release](https://github.com/suhailaleryani/DevFileExplorer/releases/latest) and download one of:
+   - **`DevFileExplorer_x.y.z_x64-setup.exe`**: the installer. It installs for your user only (no administrator rights), adds a Start Menu entry and a desktop shortcut, and can be removed from Settings > Apps.
+   - **`DevFileExplorer_x.y.z_x64-portable.zip`**: unzip anywhere and run `dev-file-explorer.exe`. It keeps its settings next to the exe, so it can live on a USB stick and leaves nothing behind.
+2. Run it. The app is not code-signed yet, so Windows SmartScreen may say "Windows protected your PC": click **More info**, then **Run anyway**.
+3. It needs the Microsoft Edge WebView2 runtime, which is already part of Windows 10 (recent) and Windows 11. The installer downloads it automatically if it is missing.
+
+### macOS and Linux
+
+There are no downloadable builds yet and nothing has been verified on these systems (see [Platform status](#platform-status)). You can [build from source](#build-from-source), and testers are very welcome.
+
+### Build from source
 
 Requirements: Node 22 or newer, stable Rust, and on Windows the Visual Studio C++ Build Tools. On Linux, the Tauri system libraries (see `.github/workflows/ci.yml` for the exact package list). Git is optional.
 
 ```
+git clone https://github.com/suhailaleryani/DevFileExplorer.git
+cd DevFileExplorer
 npm install
-npm run tauri dev        # first build is slow; later edits hot-reload
+npm run tauri dev                    # run with hot reload; the first build is slow
+npm run tauri build                  # make the installer (src-tauri/target/release/bundle)
+npm run tauri build -- --no-bundle   # just the executable
 ```
 
 Saving a `.tsx` or `.css` file hot-reloads. Saving anything in `src-tauri` rebuilds and restarts the app (20 to 40 seconds). If a rebuild fails with "Access is denied" on the executable, the old app is still running: close it and start again.
 
-Build an installer: `npm run tauri build`.
+## Quick start
+
+1. **Choose your projects folder.** On first launch click **change** in the *Projects* header of the left pane and pick the folder that holds your projects (for example `D:\Projects`). Each subfolder becomes a card.
+2. **Read the cards.** The coloured dot and "Edited 2w" show how stale a project is; the chips show its stack; the branch shows git state. Click a card to browse it on the right.
+3. **Tag and note.** Click the status pill (Active, Unfinished, Abandoned, Done, Idea) and add a one-line note for what is left.
+4. **Find what needs you.** Click **Needs attention** to see uncommitted or unpushed work, or press **Ctrl+K** to jump to any project.
+5. **Free space.** Click **clean up** to remove `node_modules`, build output and virtual environments you can rebuild.
+6. **Look back.** Click **History** in the footer to review, search or undo what you did in the last 30 days.
+
+Everything else (tabs, drag and drop, search across projects, git actions, scripts) is described in [What it does](#what-it-does). The [guide site](docs/index.html) has the same content with screenshots.
 
 ## Testing
 
@@ -186,7 +215,7 @@ There are no automated UI tests for drag and drop, marquee selection or the cont
 | JS tests (49) | pass | **pass** on Ubuntu 24.04 (WSL2, Node 24) | not run |
 | Rust tests (60) | pass | **not run yet** (needs the Tauri system libraries; CI covers it) | **not run yet** (CI covers it) |
 | App launched and used | yes | no | no |
-| Installer / portable build | not produced yet | no | no |
+| Installer / portable zip in Releases | yes (unsigned) | no | no |
 
 ### Known gaps on macOS
 
@@ -257,14 +286,26 @@ Ideas, in no particular order. Open an issue to vote or add one.
 
 ## Contributing
 
-**Developers are invited to contribute, and to ask for features.**
+**Developers are invited to contribute, and to ask for features.** DevFileExplorer is MIT licensed and every kind of help counts: ideas, bug reports, docs, tests, code.
 
-- **Want a feature?** [Open an issue](../../issues/new?template=feature_request.md) and describe the problem you are trying to solve. Small, focused ideas get built fastest.
-- **Found a bug?** [Report it](../../issues/new?template=bug_report.md). The History panel shows failed operations with their error text.
-- **Want to write code?** Read [CONTRIBUTING.md](CONTRIBUTING.md): setup, how to test safely, where things live, and a list of good first contributions. The most valuable help right now is **running the app and tests on macOS and Linux and reporting what breaks**.
-- Pull requests are checked by CI on Windows, Ubuntu and macOS.
+- **Want a feature?** [Open a feature request](https://github.com/suhailaleryani/DevFileExplorer/issues/new?template=feature_request.md) and describe the problem you are trying to solve. Small, focused ideas get built fastest.
+- **Found a bug?** [Report it](https://github.com/suhailaleryani/DevFileExplorer/issues/new?template=bug_report.md). The History panel shows failed operations with their error text.
+- **Want to help test?** The most valuable thing right now is **running the app and the tests on macOS and Linux and reporting what breaks**.
 
-No license has been chosen yet; until one is added, please open an issue to discuss before sending large changes.
+**To send a code change:**
+
+1. **Fork** the repository on GitHub and clone your fork.
+2. Create a branch: `git switch -c feat/my-change`.
+3. `npm install`, then `npm run tauri dev`. Experiment on fake projects (`powershell -File tests/demo/make-demo.ps1`), never on real folders.
+4. Make the change and **add a test** for it (`tests/unit` for TypeScript logic, `tests/rust/commands.rs` for backend).
+5. Run `npx tsc --noEmit` (prints nothing when clean) and `npm test`.
+6. Commit with a focused message such as `feat(history): ...` or `fix(search): ...`, push your branch and open a **pull request**. Include a screenshot for UI changes. CI runs the tests on Windows, Ubuntu and macOS.
+
+Full details, the code map and a list of good first contributions are in [CONTRIBUTING.md](CONTRIBUTING.md). Not sure where to start? Open an issue and ask.
+
+## License
+
+[MIT](LICENSE). By contributing you agree that your contribution is released under the same license.
 
 ## Publishing the guide site
 
