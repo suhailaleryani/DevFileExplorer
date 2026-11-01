@@ -193,7 +193,7 @@ Everything else (tabs, drag and drop, search across projects, git actions, scrip
 ```
 npm test               # JS unit + contract tests, then the Rust tests
 npm run test:js        # 49 tests: path/format helpers, attention rules, history logic, command contract
-npm run test:rust      # 60 tests: file operations, cleaner, stack detection, scripts, search, git, trash restore
+npm run test:rust      # 62 tests: file operations, cleaner, stack detection, scripts, search, git, trash restore
 npm run test:smoke     # read-only check of a running dev app (sends no input)
 npx tsc --noEmit       # type-check; must print nothing
 ```
@@ -212,14 +212,17 @@ There are no automated UI tests for drag and drop, marquee selection or the cont
 | | Windows | Linux | macOS |
 | --- | --- | --- | --- |
 | Developed and used daily | yes | no | no |
-| JS tests (49) | pass | **pass** on Ubuntu 24.04 (WSL2, Node 24) | not run |
-| Rust tests (60) | pass | **not run yet** (needs the Tauri system libraries; CI covers it) | **not run yet** (CI covers it) |
-| App launched and used | yes | no | no |
+| JS tests (49) | pass | pass (Ubuntu in CI and on a local Ubuntu 24.04) | pass (CI) |
+| Rust tests (62) | pass (local and CI) | pass (CI, Ubuntu) | pass (CI) |
+| Type-check and compile | pass | pass | pass |
+| App launched and used by a person | yes | no | no |
 | Installer / portable zip in Releases | yes (unsigned) | no | no |
+
+CI results are for the code on `main`; see the Actions tab for the latest run.
 
 ### Known gaps on macOS
 
-Nothing has been run on a Mac yet. Specifically:
+The code compiles and the automated tests pass on a macOS CI runner, but no person has run the app on a Mac yet. Specifically:
 
 - **No manual testing at all**: layout, fonts, drag and drop (WKWebView handles HTML5 drag differently; the Tauri file-drop handler is deliberately disabled), marquee selection, context menus, tab dragging and the native title-bar theming are unverified.
 - **Undo for recycled items does not exist on macOS.** The `trash` crate can move items to the Trash there but cannot list or restore them, so the Undo button reports "not supported".
@@ -233,9 +236,9 @@ Nothing has been run on a Mac yet. Specifically:
 
 ### Known gaps on Linux
 
-- The JS tests pass on real Ubuntu, but the app itself and the Rust tests have not been built there yet. Building needs `libwebkit2gtk-4.1-dev`, `libsoup-3.0-dev` and friends (installed automatically in CI).
+- The app compiles and all tests pass on an Ubuntu CI runner, but nobody has launched the window on Linux yet. Building needs `libwebkit2gtk-4.1-dev`, `libsoup-3.0-dev` and friends (installed automatically in CI).
 - **Run scripts and "Terminal" are not implemented** (no portable way to pick a terminal emulator); they report "not supported".
-- Trash behaviour depends on the desktop environment (freedesktop trash); Undo should work but is untested.
+- Trash behaviour depends on the desktop environment (freedesktop trash). Undo passes its automated round trip on the Ubuntu runner but is untested on real desktops.
 - Wayland versus X11, high-DPI scaling and dark-mode detection are untested.
 
 ### Can it be tested on Linux?
