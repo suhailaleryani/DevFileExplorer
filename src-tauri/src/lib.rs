@@ -1030,6 +1030,19 @@ fn norm_path(p: &Path) -> String {
     p.to_string_lossy().replace('/', "\\").trim_end_matches('\\').to_lowercase()
 }
 
+/// The bin reports original locations in long form, while a path may arrive in 8.3 short form (`RUNNER~1`) or with a
+/// `\\?\` prefix. The parent folder still exists after the item was recycled, so resolve that and re-attach the name.
+fn long_form(p: &Path) -> PathBuf {
+    if let (Some(parent), Some(name)) = (p.parent(), p.file_name()) {
+        if let Ok(c) = fs::canonicalize(parent) {
+            let s = c.to_string_lossy().to_string();
+            let s = s.strip_prefix(r"\\?\").unwrap_or(&s).to_string();
+            return PathBuf::from(s).join(name);
+        }
+    }
+    p.to_path_buf()
+}
+
 /// Of the bin items that came from `want`, the one deleted closest to `at_secs` (so an older file with the same name is left alone).
 fn pick_trashed(items: &[trash::TrashItem], want: &Path, at_secs: i64) -> Option<usize> {
     let w = norm_path(want);
@@ -1052,7 +1065,7 @@ async fn restore_trashed(paths: Vec<String>, deleted_at_ms: i64) -> Result<OpRes
             let mut ok = 0;
             let mut failed = Vec::new();
             for p in paths {
-                let Some(n) = pick_trashed(&items, Path::new(&p), at) else {
+                let Some(n) = pick_trashed(&items, &long_form(Path::new(&p)), at) else {
                     failed.push(format!("{p}: not in the Recycle Bin any more (emptied, or already restored)"));
                     continue;
                 };

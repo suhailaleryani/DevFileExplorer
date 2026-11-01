@@ -154,6 +154,18 @@ fn pick_trashed_chooses_the_item_deleted_closest_in_time() {
 }
 
 #[test]
+fn long_form_keeps_ordinary_paths_and_survives_missing_parents() {
+    let t = Tmp::new();
+    t.write("a.txt", "x");
+    let got = long_form(&t.p("a.txt"));
+    assert_eq!(got.file_name().unwrap(), "a.txt");
+    assert!(!got.to_string_lossy().starts_with(r"\\?\"));
+    assert!(got.parent().unwrap().exists());
+    let missing = Path::new("Z:\\no\\such\\folder\\f.txt");
+    assert_eq!(long_form(missing), missing.to_path_buf());
+}
+
+#[test]
 fn pick_trashed_ignores_case_slashes_and_missing_items() {
     let items = vec![bin_item("D:\\Proj", "File.TXT", 10)];
     assert_eq!(pick_trashed(&items, Path::new("d:/proj/file.txt"), 10), Some(0));
