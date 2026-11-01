@@ -7,8 +7,8 @@ function Check($name, $ok, $detail = "") {
   if ($ok) { Write-Host "PASS  $name" } else { Write-Host "FAIL  $name  $detail"; $script:fail++ }
 }
 
-$p = Get-Process tauri-app -ErrorAction SilentlyContinue | Select-Object -First 1
-Check "tauri-app process is running" ($null -ne $p)
+$p = Get-Process dev-file-explorer -ErrorAction SilentlyContinue | Select-Object -First 1
+Check "dev-file-explorer process is running" ($null -ne $p)
 if ($null -eq $p) { exit 1 }
 Check "main window exists" ($p.MainWindowHandle -ne 0)
 Check "process responds" $p.Responding
@@ -41,7 +41,7 @@ if ($w -gt 0 -and $h -gt 0) {
   $g.Dispose()
   $colors = @{}
   for ($x = 0; $x -lt $w; $x += 40) { for ($y = 0; $y -lt $h; $y += 40) { $colors[$bmp.GetPixel($x, $y).ToArgb()] = 1 } }
-  $out = Join-Path $env:TEMP "fileexplorer-smoke.png"
+  $out = Join-Path $env:TEMP "devfileexplorer-smoke.png"
   $bmp.Save($out); $bmp.Dispose()
   Check "screenshot is not blank ($($colors.Count) distinct colours, saved to $out)" ($colors.Count -ge 4)
 }
