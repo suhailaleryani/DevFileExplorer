@@ -84,6 +84,8 @@
     <li>The app is not code-signed yet, so SmartScreen may warn: click <b>More info</b>, then <b>Run anyway</b>.</li>
     <li>It needs the Edge WebView2 runtime (built into Windows 11 and recent Windows 10); the installer fetches it if missing.</li>
   </ol>
+  <h3>Updating</h3>
+  <p>The installed app checks GitHub Releases a few seconds after launch. When a newer version exists, the <b>Update</b> button in the footer turns blue and shows the version: click it, then <b>Install and restart</b>. You can click <b>Update</b> any time to check by hand. Updates are signed and verified before they are installed. The portable zip opens the release page instead, so you can download the new zip.</p>
   <h3>macOS and Linux</h3>
   <p>No downloads yet and not verified. Build from source:</p>
 <pre><code>git clone https://github.com/suhailaleryani/DevFileExplorer.git
@@ -118,7 +120,7 @@ npm run tauri dev</code></pre>
   <h2>Browsing and files</h2>
   <ul>
     <li><b>Tabs</b>: <kbd>Ctrl</kbd>+<kbd>T</kbd> new, <kbd>Ctrl</kbd>+<kbd>W</kbd> close, middle-click a folder to open it in a new tab, drag to reorder. Tabs are restored on the next launch. <b>Every tab has its own projects folder and list</b>: click <b>change</b> to set it for that tab only; new tabs inherit the folder of the tab they were opened from.</li>
-    <li><b>Address bar</b>: click it or press <kbd>Ctrl</kbd>+<kbd>L</kbd> to type a path. Alt+Left/Right and the mouse back/forward buttons move through history.</li>
+    <li><b>Address bar</b>: click it or press <kbd>Ctrl</kbd>+<kbd>L</kbd> to type a path. Alt+Left/Right and the mouse back/forward buttons move through history, and the selection in a folder you come back to is restored (Up selects the folder you came from).</li>
     <li><b>Select</b> with click, Ctrl, Shift, a drag rectangle, or the keyboard. Type a letter (or a few quickly) to jump to the first item that starts with it, folders first; press the same letter again for the next match. The footer shows counts and total size.</li>
     <li><b>Copy, cut, paste</b> and <b>drag and drop</b> (hold Ctrl to copy). Clashes keep both files ("name - copy").</li>
     <li><b>Rename</b> with <kbd>F2</kbd>; <b>New folder</b> and <b>New file</b> open straight into rename.</li>

@@ -36,6 +36,7 @@ import { QuickJump } from "./QuickJump";
 import { Sidebar, useProjects } from "./Sidebar";
 import { baseName, crumbs, dragState, formatSize, parentOf, typeLabel } from "./util";
 import { STATUSES } from "./api";
+import { UpdateButton } from "./Updater";
 import type { HEntry, HInput, HKind } from "./historyLog.ts";
 import { initHistory, logOp, updateEntry, useHistory } from "./historyStore";
 import { HistoryModal } from "./History";
@@ -199,6 +200,7 @@ export default function App() {
     try {
       const e = await listDir(cwd);
       if (seq !== loadSeq.current) return;
+      loadedCwd.current = cwd;
       setEntries(e);
       setError(null);
     } catch (err) {
@@ -208,7 +210,20 @@ export default function App() {
     }
   }, [cwd]);
 
+  // remember the selection of every folder we leave, so Back / Forward / Up put it (or the folder we came from) back
+  const selMemory = useRef(new Map<string, { sel: string[]; cur: string | null }>());
+  const prevCwd = useRef<string | null>(null);
+  const pendingSel = useRef<{ sel: string[]; cur: string | null } | null>(null);
+  const loadedCwd = useRef<string | null>(null);
+
   useEffect(() => {
+    const prev = prevCwd.current;
+    if (prev && prev !== cwd) selMemory.current.set(prev, { sel: [...selected], cur: cursor.current });
+    const saved = cwd ? selMemory.current.get(cwd) : undefined;
+    pendingSel.current =
+      saved && saved.sel.length ? saved : prev && cwd && prev !== cwd && parentOf(prev) === cwd ? { sel: [prev], cur: prev } : null;
+    prevCwd.current = cwd;
+    cursor.current = null;
     setSelected(new Set());
     anchor.current = null;
     setRenaming(null);
@@ -248,6 +263,20 @@ export default function App() {
       return c * dir;
     });
   }, [entries, sort, filter, folderSizes]);
+
+  // put back the remembered selection once this folder's listing has loaded (not the previous folder's rows)
+  useEffect(() => {
+    const p = pendingSel.current;
+    if (!p || loadedCwd.current !== cwd) return;
+    pendingSel.current = null;
+    const present = p.sel.filter((s) => rows.some((r) => r.path === s));
+    if (!present.length) return;
+    setSelected(new Set(present));
+    anchor.current = present[0];
+    const cur = p.cur && present.includes(p.cur) ? p.cur : present[0];
+    cursor.current = cur;
+    setReveal(rows.findIndex((r) => r.path === cur));
+  }, [rows, cwd]);
 
   const selectedEntries = useMemo(() => rows.filter((r) => selected.has(r.path)), [rows, selected]);
 
@@ -1071,6 +1100,7 @@ export default function App() {
               </svg>
               History
             </button>
+            <UpdateButton />
             <ThemeButton theme={theme} onChange={(t) => update((x) => ({ ...x, theme: t }))} />
           </>
         }

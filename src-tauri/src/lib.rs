@@ -1121,6 +1121,15 @@ fn state_path(app: &tauri::AppHandle) -> PathBuf {
         .join("state.json")
 }
 
+/// True for the portable zip: an installer-based update would install a second copy, so the UI sends those users to Releases.
+#[tauri::command]
+fn is_portable() -> bool {
+    std::env::current_exe()
+        .ok()
+        .and_then(|e| e.parent().map(|d| d.join("portable.flag").exists()))
+        .unwrap_or(false)
+}
+
 #[tauri::command]
 fn load_state(app: tauri::AppHandle) -> String {
     fs::read_to_string(state_path(&app)).unwrap_or_else(|_| "{}".into())
@@ -1181,7 +1190,10 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .invoke_handler(tauri::generate_handler![
+            is_portable,
             list_dir,
             dir_size,
             project_info,

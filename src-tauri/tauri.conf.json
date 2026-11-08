@@ -27,6 +27,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -34,5 +35,12 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERGQjA5OUIzREU1QUYzNTQKUldSVTgxcmVzNW13MzAzSWM0L3VDYjJ4RGx0cklSV0EwU2x4Y0NOL0lLS0ZNb3IrMFpYckVjdW4K",
+      "endpoints": ["https://github.com/suhailaleryani/DevFileExplorer/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
+    }
   }
 }

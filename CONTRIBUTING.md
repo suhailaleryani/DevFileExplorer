@@ -36,6 +36,10 @@ npm run tauri dev        # first build is slow
 
 You need Node 22+, stable Rust and, on Windows, the Visual Studio C++ Build Tools. On Linux install the Tauri system libraries first (see `.github/workflows/ci.yml` for the exact list).
 
+## Releases and the update key
+
+Only maintainers publish releases (see "Publishing a release" in the README). The updater signing key lives in the git-ignored `.vip-keys` folder: never commit it, paste it in an issue or share it. Contributors do not need it; `npm run tauri dev` works without it.
+
 ## Before you open a pull request
 
 ```

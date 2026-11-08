@@ -13,6 +13,7 @@ Built with **Tauri 2** (Rust) and **React 19 + TypeScript**. No UI library, no d
 ## Contents
 
 - [Install](#install)
+- [Updating](#updating)
 - [Quick start](#quick-start)
 - [What it does](#what-it-does)
 - [Keyboard and mouse](#keyboard-and-mouse)
@@ -51,6 +52,7 @@ Pin any folder (context menu, or drag it onto the pinned area). Pins look like p
 
 - **Tabs** with their own history; open a folder in a new tab with middle-click or the context menu; reorder by dragging; open tabs are restored on the next launch. **Each tab also has its own projects folder and project list**: click **change** in a tab to give just that tab another projects folder, and a new tab starts with the folder of the tab it was opened from.
 - **Address bar** you can type into, plus clickable breadcrumbs. Back, forward and up navigation, including the mouse back and forward buttons.
+- **Your place is kept**: going into a folder and pressing Back (or Forward) restores that folder's selection, and going Up (Backspace) selects the folder you came from.
 - **Columns**: name, date modified, type, size; click a header to sort. File icons are coloured by type.
 - **Folder sizes** are calculated in the background on demand ("calculate"), with a time budget so a huge folder never freezes the window.
 - **Filter box** (Ctrl+F) narrows the current folder as you type.
@@ -161,6 +163,12 @@ On macOS and Linux the equivalent per-user app-data folder is used. The bundle i
 2. Run it. The app is not code-signed yet, so Windows SmartScreen may say "Windows protected your PC": click **More info**, then **Run anyway**.
 3. It needs the Microsoft Edge WebView2 runtime, which is already part of Windows 10 (recent) and Windows 11. The installer downloads it automatically if it is missing.
 
+### Updating
+
+The installed app updates itself from GitHub Releases. A few seconds after launch it quietly checks for a newer version; when one exists the **Update** button in the footer turns blue and shows the version number. Click it, read the notes and choose **Install and restart**. You can also click **Update** at any time to check by hand. Every update is signed, and the app refuses one that does not match the public key built into it.
+
+The portable zip does not self-install (that would put a second copy on disk): its Update button opens the release page so you can download the new zip. If a check fails (offline, or no release published yet) nothing happens until you click the button, which then says why.
+
 ### macOS and Linux
 
 There are no downloadable builds yet and nothing has been verified on these systems (see [Platform status](#platform-status)). You can [build from source](#build-from-source), and testers are very welcome.
@@ -180,6 +188,20 @@ npm run tauri build -- --no-bundle   # just the executable
 
 Saving a `.tsx` or `.css` file hot-reloads. Saving anything in `src-tauri` rebuilds and restarts the app (20 to 40 seconds). If a rebuild fails with "Access is denied" on the executable, the old app is still running: close it and start again.
 
+### Publishing a release (maintainers)
+
+Updates are signed with a key pair made once with `npx tauri signer generate -w .vip-keys/updater.key`. The `.vip-keys` folder is git-ignored: **keep the private key (`updater.key`) backed up and never commit it**. If it is lost, installed copies can never update again and a new key means everyone must reinstall. The public key is in `src-tauri/tauri.conf.json` (`plugins.updater.pubkey`).
+
+One-time setup on GitHub (Settings, Secrets and variables, Actions): add a secret `TAURI_SIGNING_PRIVATE_KEY` containing the whole text of `.vip-keys/updater.key`, and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` if the key has a password (the generated one has none; leave it empty).
+
+For each release:
+
+1. Raise the version in `package.json`, `src-tauri/tauri.conf.json` and `src-tauri/Cargo.toml` (the app only offers an update when the release is newer than the installed version).
+2. Commit, push, then tag and push the tag: `git tag v0.1.2 && git push origin v0.1.2`.
+3. The **Release** workflow builds the installers for Windows, macOS and Linux, signs them and publishes a GitHub Release with `latest.json`, which installed apps read. The portable zip is not built by the workflow; attach it to the release by hand if you want one.
+
+To build a signed installer locally, set `TAURI_SIGNING_PRIVATE_KEY_PATH` to `.vip-keys/updater.key` first; without a key `npm run tauri build` fails because updater artifacts are enabled.
+
 ## Quick start
 
 1. **Choose your projects folder.** On first launch click **change** in the *Projects* header of the left pane and pick the folder that holds your projects (for example `D:\Projects`). Each subfolder becomes a card.
@@ -198,7 +220,7 @@ npm test               # JS unit + contract tests, then the Rust tests
 npm run test:js        # 49 tests: path/format helpers, attention rules, history logic, command contract
 npm run test:rust      # 62 tests: file operations, cleaner, stack detection, scripts, search, git, trash restore
 npm run test:smoke     # read-only check of a running dev app (sends no input)
-npm run test:ui        # isolated UI regression checks for tabs and per-tab project lists (needs the demo projects and the Vite server, see tests/demo)
+npm run test:ui        # isolated UI regression checks for tabs, per-tab project lists and selection after Back (needs the demo projects and the Vite server, see tests/demo)
 npx tsc --noEmit       # type-check; must print nothing
 ```
 
