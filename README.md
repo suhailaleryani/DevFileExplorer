@@ -126,6 +126,7 @@ A play button on cards and pins (or right-click, "Run script...") lists the `pac
 | Delete / Shift+Delete | Recycle / delete permanently |
 | Ctrl+A | Select all |
 | Arrows, Page Up/Down, Home, End | Move the selection |
+| Type a letter or a few letters | Jump to the first item whose name starts with them (folders first); press the same letter again to step to the next match |
 | Esc | Close a panel, clear the filter or search |
 | Middle-click a folder, breadcrumb or tab | Open in a new tab (tabs: close) |
 

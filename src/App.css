@@ -303,11 +303,6 @@ select:focus {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.status {
-  width: 98px;
-  padding: 1px 4px;
-  font-size: 11px;
-}
 .status.s-active { color: var(--green); }
 .status.s-unfinished { color: var(--orange); }
 .status.s-abandoned { color: var(--red); }
@@ -919,6 +914,7 @@ button {
   appearance: none;
   -webkit-appearance: none;
   width: auto;
+  field-sizing: content; /* shrink to the selected text, not the widest option */
   min-width: 0;
   padding: 1px 8px;
   font-size: 11px;

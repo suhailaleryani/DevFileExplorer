@@ -777,6 +777,7 @@ export default function App() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [commitsFor, setCommitsFor] = useState<string | null>(null);
+  const typeAhead = useRef({ buf: "", at: 0 });
   const keyRef = useRef<(e: KeyboardEvent) => void>(() => {});
   keyRef.current = (e) => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey && e.key.toLowerCase() === "f") {
@@ -844,8 +845,28 @@ export default function App() {
     } else if (e.altKey && e.key === "ArrowLeft") step(-1);
     else if (e.altKey && e.key === "ArrowRight") step(1);
     else if (e.key === "Escape") {
+      typeAhead.current = { buf: "", at: 0 };
       setSelected(new Set());
       setMenu(null);
+    } else if (!ctrl && !e.altKey && e.key.length === 1 && e.key !== " " && rows.length) {
+      // type-ahead: jump to the first row (folders come first) whose name starts with the typed text
+      const now = Date.now();
+      const ta = typeAhead.current;
+      const buf = now - ta.at > 800 ? e.key.toLowerCase() : ta.buf + e.key.toLowerCase();
+      typeAhead.current = { buf, at: now };
+      const cycling = buf.length > 1 && [...buf].every((c) => c === buf[0]);
+      let hit = -1;
+      if (cycling) {
+        // same letter pressed repeatedly: step through the entries starting with it
+        const idx = rows.map((_, i) => i).filter((i) => rows[i].name.toLowerCase().startsWith(buf[0]));
+        if (idx.length) hit = idx.find((i) => i > cur) ?? idx[0];
+      } else {
+        hit = rows.findIndex((r) => r.name.toLowerCase().startsWith(buf));
+      }
+      if (hit >= 0) {
+        e.preventDefault();
+        moveCursor(hit, false);
+      }
     }
   };
   // mouse "back" (button 3) and "forward" (button 4) side buttons
